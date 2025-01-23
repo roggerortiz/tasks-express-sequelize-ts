@@ -25,14 +25,17 @@ UserModel.init(
       type: DataTypes.STRING
     },
     email: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     },
     phone: {
       type: DataTypes.STRING,
-      allowNull: true
+      allowNull: true,
+      unique: true
     },
     username: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: true
     },
     password: {
       type: DataTypes.STRING
