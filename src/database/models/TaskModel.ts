@@ -1,4 +1,5 @@
 import { sequelize } from '@/database'
+import UtilsHelper from '@/helpers/UtilsHelper'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import UserModel from './UserModel'
 
@@ -16,13 +17,19 @@ TaskModel.init(
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true
+      primaryKey: true,
+      allowNull: false
     },
     title: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false
     },
     slug: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false,
+      set(value: string) {
+        this.setDataValue('slug', UtilsHelper.slugify(value))
+      }
     },
     description: {
       type: DataTypes.STRING,
@@ -30,17 +37,20 @@ TaskModel.init(
     },
     important: {
       type: DataTypes.BOOLEAN,
-      allowNull: true,
+      allowNull: false,
       defaultValue: false
     },
     user_id: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   },
   {
     sequelize,
-    timestamps: false,
-    modelName: 'tasks'
+    modelName: 'Task',
+    tableName: 'tasks',
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   }
 )
 

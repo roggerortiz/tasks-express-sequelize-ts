@@ -1,6 +1,5 @@
 import PaginationHelper from '@/helpers/PaginationHelper'
 import SequelizeHelper from '@/helpers/SequelizeHelper'
-import UtilsHelper from '@/helpers/UtilsHelper'
 import { CreateTask, Task, UpdateTask } from '@/types/models/Task'
 import Pager from '@/types/pagination/Pager'
 import Paging from '@/types/pagination/Paging'
@@ -38,15 +37,13 @@ export default class TaskService {
   }
 
   static async create(data: CreateTask): Promise<Task | null> {
-    const slug: string = UtilsHelper.slugify(data.title) ?? ''
-    const document: TaskModel | null = await TaskModel.create({ ...data, slug })
+    const document: TaskModel | null = await TaskModel.create({ ...data, slug: data.title })
     return document?.toJSON() || null
   }
 
   static async update(id: number, data: UpdateTask): Promise<Task | null> {
-    const slug: string = UtilsHelper.slugify(data.title) ?? ''
     const document: TaskModel | null = await TaskModel.findByPk(id)
-    await document?.update({ ...data, slug })
+    await document?.update({ ...data, slug: data.title })
     await document?.save()
     return document?.toJSON() || null
   }
