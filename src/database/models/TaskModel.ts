@@ -22,11 +22,22 @@ TaskModel.init(
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      unique: true,
+      validate: {
+        exists: async (value: string) => {
+          const count: number = await TaskModel.count({ where: { title: value } })
+
+          if (count) {
+            throw new Error("The 'Title' value already exists")
+          }
+        }
+      }
     },
     slug: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       set(value: string) {
         this.setDataValue('slug', UtilsHelper.slugify(value))
       }

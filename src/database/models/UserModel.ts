@@ -31,17 +31,44 @@ UserModel.init(
     email: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        exists: async (value: string) => {
+          const count: number = await UserModel.count({ where: { email: value } })
+
+          if (count) {
+            throw new Error("The 'Email' value already exists")
+          }
+        }
+      }
     },
     phone: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        exists: async (value: string) => {
+          const count: number = await UserModel.count({ where: { phone: value } })
+
+          if (count) {
+            throw new Error("The 'Phone' value already exists")
+          }
+        }
+      }
     },
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
+      validate: {
+        exists: async (value: string) => {
+          const count: number = await UserModel.count({ where: { username: value } })
+
+          if (count) {
+            throw new Error("The 'Username' value already exists")
+          }
+        }
+      }
     },
     password: {
       type: DataTypes.STRING,

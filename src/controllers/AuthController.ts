@@ -36,26 +36,6 @@ export default class AuthController {
         password: req.body.password
       }
 
-      const emailCount: number = await UserService.count({ email: data.email })
-
-      if (emailCount) {
-        throw new BadRequestError('Email already exists')
-      }
-
-      const usernameCount: number = await UserService.count({ username: data.username })
-
-      if (usernameCount) {
-        throw new BadRequestError('Username already exists')
-      }
-
-      if (data.phone) {
-        const phoneCount: number = await UserService.count({ phone: data.phone })
-
-        if (phoneCount) {
-          throw new BadRequestError('Phone already exists')
-        }
-      }
-
       const user: User | null = await UserService.create(data)
 
       if (!user) {

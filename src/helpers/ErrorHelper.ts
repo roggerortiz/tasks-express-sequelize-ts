@@ -5,6 +5,7 @@ import NotFoundError from '@/types/errors/NotFoundError'
 import UnauthorizedError from '@/types/errors/UnauthorizedError'
 import console from 'console'
 import { TokenExpiredError } from 'jsonwebtoken'
+import { ValidationError } from 'sequelize'
 import { ZodError } from 'zod'
 
 export default class ErrorHelper {
@@ -27,6 +28,11 @@ export default class ErrorHelper {
 
     if (error instanceof ZodError) {
       const errors = error.errors.map(({ path, message }) => ({ path: path.join('.'), message }))
+      return { status: ResponseStatus.BAD_REQUEST, errors }
+    }
+
+    if (error instanceof ValidationError) {
+      const errors = error.errors.map(({ path, message }) => ({ path, message }))
       return { status: ResponseStatus.BAD_REQUEST, errors }
     }
 
