@@ -1,15 +1,24 @@
 import TaskService from '@/database/services/TaskService'
+import RequestHelper from '@/helpers/RequestHelper'
 import ResponseStatus from '@/types/enums/ResponseStatus'
 import NotFoundError from '@/types/errors/NotFoundError'
 import { CreateTask, Task, UpdateTask } from '@/types/models/Task'
+import Pager from '@/types/pagination/Pager'
+import Paging from '@/types/pagination/Paging'
+import { GetTasks } from '@/types/requests/GetTasks'
 import { Request } from '@/types/requests/Request'
 import { NextFunction, Response } from 'express'
 
 export default class TaskController {
   static async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const tasks = await TaskService.findAll()
-      res.status(ResponseStatus.SUCCESS).json(tasks)
+      const pager: Pager = RequestHelper.pager(req)
+      const params: GetTasks = {
+        free_text: RequestHelper.queryParamString(req, 'free_text'),
+        important: RequestHelper.queryParamBoolean(req, 'important')
+      }
+      const taskPaging: Paging<Task> = await TaskService.findAll(pager, params)
+      res.status(ResponseStatus.SUCCESS).json(taskPaging)
     } catch (error) {
       next(error)
     }

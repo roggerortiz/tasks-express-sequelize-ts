@@ -1,11 +1,10 @@
 import PasswordHelper from '@/helpers/PasswordHelper'
 import { CreateUser, User } from '@/types/models/User'
-import TaskModel from '../models/TaskModel'
 import UserModel from '../models/UserModel'
 
 export default class UserService {
   static async count(filters?: any): Promise<number> {
-    const count = await TaskModel.count({ where: filters })
+    const count = await UserModel.count({ where: filters })
     return count
   }
 

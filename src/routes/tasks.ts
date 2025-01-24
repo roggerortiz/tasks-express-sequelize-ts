@@ -5,7 +5,7 @@ import { Router } from 'express'
 
 const router = Router()
 
-router.get('/', TaskController.getAll)
+router.get('/', TaskValidator.getTasks, TaskController.getAll)
 router.get('/:id', IdValidator.id, TaskController.getById)
 router.post('/', TaskValidator.saveTask, TaskController.create)
 router.put('/:id', IdValidator.id, TaskValidator.saveTask, TaskController.update)

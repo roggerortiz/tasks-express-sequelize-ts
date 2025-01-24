@@ -1,7 +1,7 @@
 import validateData from '@/middlewares/validateData'
 import RequestDataType from '@/types/enums/RequestDataType'
-import loginSchema from '@/zod/LoginSchema'
-import signupSchema from '@/zod/SignupSchema'
+import loginSchema from '@/zod/schemas/LoginSchema'
+import signupSchema from '@/zod/schemas/SignupSchema'
 
 export default class AuthValidator {
   static login = validateData(loginSchema, RequestDataType.BODY)
