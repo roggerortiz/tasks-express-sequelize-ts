@@ -1,5 +1,6 @@
 import { sequelize } from '@/database'
 import PasswordHelper from '@/helpers/PasswordHelper'
+import DatabaseField from '@/types/enums/DatabaseField'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 
 class UserModel extends Model<InferAttributes<UserModel>, InferCreationAttributes<UserModel>> {
@@ -82,8 +83,8 @@ UserModel.init(
     sequelize,
     modelName: 'User',
     tableName: 'users',
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    createdAt: DatabaseField.CREATED_AT,
+    updatedAt: DatabaseField.UPDATED_AT
   }
 )
 

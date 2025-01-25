@@ -2,6 +2,7 @@ import { sequelize } from '@/database'
 import UtilsHelper from '@/helpers/UtilsHelper'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import UserModel from './UserModel'
+import DatabaseField from '@/types/enums/DatabaseField'
 
 class TaskModel extends Model<InferAttributes<TaskModel>, InferCreationAttributes<TaskModel>> {
   declare id: CreationOptional<number>
@@ -60,8 +61,8 @@ TaskModel.init(
     sequelize,
     modelName: 'Task',
     tableName: 'tasks',
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    createdAt: DatabaseField.CREATED_AT,
+    updatedAt: DatabaseField.UPDATED_AT
   }
 )
 

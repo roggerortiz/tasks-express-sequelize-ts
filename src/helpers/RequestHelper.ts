@@ -1,3 +1,5 @@
+import DatabaseField from '@/types/enums/DatabaseField'
+import SortDirection from '@/types/enums/SortDirection'
 import Pager from '@/types/pagination/Pager'
 import { Request } from 'express'
 
@@ -22,10 +24,14 @@ export default class RequestHelper {
   }
 
   static pager(req: Request): Pager {
-    const page_size = this.queryParamNumber(req, 'page_size') ?? 0
-    const page_index = this.queryParamNumber(req, 'page_index') ?? 1
-    const sort_field = this.queryParamString(req, 'sort_field') ?? ''
-    const sort_direction = this.queryParamString(req, 'sort_direction') ?? ''
+    const page_size = this.queryParamNumber(req, 'page_size') || 0
+    const page_index = this.queryParamNumber(req, 'page_index') || 1
+    const sort_field = this.queryParamString(req, 'sort_field')?.trim()?.toLowerCase() || DatabaseField.CREATED_AT
+    let sort_direction = this.queryParamString(req, 'sort_direction')?.trim()?.toUpperCase() || ''
+
+    if (!sort_direction) {
+      sort_direction = sort_field === DatabaseField.CREATED_AT ? SortDirection.DESC : SortDirection.ASC
+    }
 
     const pager: Pager = {
       page_size,
