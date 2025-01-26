@@ -12,4 +12,5 @@ export default class EnvHelper {
   static DB_HOST: string = process.env.DB_HOST || ''
   static DB_SSL: boolean = (process.env.DB_SSL || 'false').toLowerCase() === 'true'
   static DB_PORT: number = Number(process.env.DB_PORT) || 5432
+  static SERVER_HOST: string = process.env.SERVER_HOST || ''
 }

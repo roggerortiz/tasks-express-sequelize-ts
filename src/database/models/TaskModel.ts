@@ -1,8 +1,8 @@
-import { sequelize } from '@/database'
+import { sequelize } from '@/helpers/SequelizeHelper'
 import UtilsHelper from '@/helpers/UtilsHelper'
+import DatabaseField from '@/types/enums/DatabaseField'
 import { CreationOptional, DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import UserModel from './UserModel'
-import DatabaseField from '@/types/enums/DatabaseField'
 
 class TaskModel extends Model<InferAttributes<TaskModel>, InferCreationAttributes<TaskModel>> {
   declare id: CreationOptional<number>

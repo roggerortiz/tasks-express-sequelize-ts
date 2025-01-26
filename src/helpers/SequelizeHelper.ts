@@ -5,26 +5,29 @@ import { Dialect, InferAttributes, InferCreationAttributes, Model, Op, Options, 
 import EnvHelper from './EnvHelper'
 import PaginationHelper from './PaginationHelper'
 
+const options: Options = {
+  host: EnvHelper.DB_HOST,
+  port: EnvHelper.DB_PORT,
+  dialect: EnvHelper.DB_DIALECT as Dialect,
+  ssl: EnvHelper.DB_SSL,
+  logging: false
+}
+
+if (EnvHelper.DB_SSL) {
+  options.dialectOptions = {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  }
+}
+
+export const sequelize = new Sequelize(EnvHelper.DB_NAME, EnvHelper.DB_USERNAME, EnvHelper.DB_PASSWORD, options)
+
 export default class SequelizeHelper {
-  static connection(): Sequelize {
-    const options: Options = {
-      host: EnvHelper.DB_HOST,
-      port: EnvHelper.DB_PORT,
-      dialect: EnvHelper.DB_DIALECT as Dialect,
-      ssl: EnvHelper.DB_SSL,
-      logging: false
-    }
-
-    if (EnvHelper.DB_SSL) {
-      options.dialectOptions = {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false
-        }
-      }
-    }
-
-    return new Sequelize(EnvHelper.DB_NAME, EnvHelper.DB_USERNAME, EnvHelper.DB_PASSWORD, options)
+  static async connect() {
+    await sequelize.authenticate()
+    // await sequelize.sync({ force: true })
   }
 
   static paginate<T extends Model<InferAttributes<T>, InferCreationAttributes<T>>, RT>(
