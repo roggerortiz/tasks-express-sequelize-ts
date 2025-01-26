@@ -3,6 +3,7 @@ import BadRequestError from '@/types/errors/BadRequestError'
 import ForbiddenError from '@/types/errors/ForbiddenError'
 import NotFoundError from '@/types/errors/NotFoundError'
 import UnauthorizedError from '@/types/errors/UnauthorizedError'
+import { ResponseError } from '@/types/response/ResponseError'
 import { TokenExpiredError } from 'jsonwebtoken'
 import console from 'node:console'
 import { ValidationError } from 'sequelize'
@@ -15,11 +16,11 @@ export default class ErrorHelper {
     }
 
     if (error instanceof ForbiddenError) {
-      return { status: ResponseStatus.FORBIDDEN, message: 'Token was not provided' }
+      return { status: ResponseStatus.FORBIDDEN }
     }
 
     if (error instanceof NotFoundError) {
-      return { status: ResponseStatus.NOT_FOUND, message: error.message || undefined }
+      return { status: ResponseStatus.NOT_FOUND }
     }
 
     if (error instanceof BadRequestError) {
@@ -27,12 +28,12 @@ export default class ErrorHelper {
     }
 
     if (error instanceof ZodError) {
-      const errors = error.errors.map(({ path, message }) => ({ path: path.join('.'), message }))
+      const errors: ResponseError[] = error.errors.map(({ path, message }) => ({ path: path.join('.'), message }))
       return { status: ResponseStatus.BAD_REQUEST, errors }
     }
 
     if (error instanceof ValidationError) {
-      const errors = error.errors.map(({ path, message }) => ({ path, message }))
+      const errors: ResponseError[] = error.errors.map(({ path, message }) => ({ path: path ?? '', message }))
       return { status: ResponseStatus.BAD_REQUEST, errors }
     }
 
