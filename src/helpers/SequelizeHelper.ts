@@ -1,9 +1,7 @@
 import DatabaseField from '@/types/enums/DatabaseField'
 import Pager from '@/types/pagination/Pager'
-import Paging from '@/types/pagination/Paging'
-import { Dialect, InferAttributes, InferCreationAttributes, Model, Op, Options, Sequelize } from 'sequelize'
+import { Dialect, Op, Options, Sequelize } from 'sequelize'
 import EnvHelper from './EnvHelper'
-import PaginationHelper from './PaginationHelper'
 
 const options: Options = {
   host: EnvHelper.DB_HOST,
@@ -30,15 +28,13 @@ export default class SequelizeHelper {
     // await sequelize.sync({ force: true })
   }
 
-  static paginate<T extends Model<InferAttributes<T>, InferCreationAttributes<T>>, RT>(
-    documents: T[],
-    pager: Pager,
-    total_items: number
-  ): Paging<RT> {
-    const page_count: number = PaginationHelper.pageCount(pager.page_size, total_items)
-    const data: RT[] = documents.map((document: T) => document.toJSON() as RT)
-    const paging: Paging<RT> = { pager: { ...pager, total_items, page_count }, data }
-    return paging
+  static toJSON<T>(object: any, omit?: string[]): T {
+    const { _id, ...data } = object
+
+    omit = [...(omit ?? []), DatabaseField.CREATED_AT, DatabaseField.UPDATED_AT]
+    omit.forEach((field: string) => Reflect.deleteProperty(data, field))
+
+    return { id: _id, ...data }
   }
 
   static aggregate(pager: Pager, filters: any, freeTextFields?: string[]): any {
